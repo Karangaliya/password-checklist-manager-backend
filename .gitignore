@@ -1,2 +1,81 @@
-node_modules
+# Node modules
+node_modules/
+
+# Environment files
 .env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Build output
+dist/
+build/
+tmp/
+temp/
+coverage/
+
+# IDE / Editor specific
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Optional dependency folders
+jspm_packages/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# PM2 logs and dumps
+.pm2/
+
+# Docker
+docker-compose.override.yml
+.docker/
+*.dockerfile
+*.tar
+*.img
+
+# Prisma / ORM specific (optional)
+prisma/migrations/dev.db
+prisma/dev.db
+
+# Database / cache / uploads
+*.sqlite
+*.db
+*.sqlite3
+*.db-journal
+uploads/
+storage/
+cache/
+
+# Local environment
+.envrc
+.env.*
+!.env.example
