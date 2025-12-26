@@ -1,7 +1,7 @@
 "use strict";
 import { Model } from "sequelize";
 export default (sequelize, DataTypes) => {
-  class ProjectMember extends Model {
+  class Checklist extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,21 +9,21 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ProjectMember.belongsTo(models.Project, {
+      Checklist.belongsTo(models.Project, {
         foreignKey: "project_id",
         as: "project",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
-      ProjectMember.belongsTo(models.User, {
-        foreignKey: "user_id",
-        as: "user",
-        onDelete: "CASCADE",
+      Checklist.belongsTo(models.User, {
+        foreignKey: "created_by",
+        as: "creator",
+        onDelete: "RESTRICT",
         onUpdate: "CASCADE",
       });
     }
   }
-  ProjectMember.init(
+  Checklist.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -35,23 +35,27 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      user_id: {
+      created_by: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      role: {
-        type: DataTypes.ENUM("Owner", "Admin", "Member", "Viewer"),
+      title: {
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: "Member",
+      },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      is_template: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       status: {
-        type: DataTypes.ENUM("Active", "Invited", "Removed"),
+        type: DataTypes.ENUM("Active", "Archived"),
         allowNull: false,
         defaultValue: "Active",
-      },
-      joined_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
       },
       created_at: {
         type: DataTypes.DATE,
@@ -68,8 +72,8 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "ProjectMember",
-      tableName: "project_members",
+      modelName: "Checklist",
+      tableName: "checklists",
       timestamps: false,
       createdAt: "created_at",
       updatedAt: "updated_at",
@@ -78,5 +82,5 @@ export default (sequelize, DataTypes) => {
       underscored: true,
     }
   );
-  return ProjectMember;
+  return Checklist;
 };

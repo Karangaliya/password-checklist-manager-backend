@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+import { Model } from "sequelize";
 export default (sequelize, DataTypes) => {
   class Project extends Model {
     /**
@@ -24,6 +24,11 @@ export default (sequelize, DataTypes) => {
       Project.hasMany(models.ProjectMember, {
         foreignKey: "project_id",
         as: "members",
+        onDelete: "CASCADE",
+      });
+      Project.hasMany(models.Checklist, {
+        foreignKey: "project_id",
+        as: "checklists",
         onDelete: "CASCADE",
       });
     }

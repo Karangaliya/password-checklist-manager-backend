@@ -48,6 +48,11 @@ export default (sequelize, DataTypes) => {
         as: "project_memberships",
         onDelete: "CASCADE",
       });
+
+      User.hasMany(models.Checklist, {
+        foreignKey: "created_by",
+        as: "created_checklists",
+      });
     }
   }
 
