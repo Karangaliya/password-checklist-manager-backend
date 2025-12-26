@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 export default (sequelize, DataTypes) => {
-  class Organization extends Model {
+  class Project extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,32 +9,35 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Organization.belongsTo(models.User, {
-        foreignKey: "owner_id",
-        as: "owner",
+      Project.belongsTo(models.Organization, {
+        foreignKey: "organization_id",
+        as: "organization",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      Project.belongsTo(models.User, {
+        foreignKey: "created_by",
+        as: "creator",
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
       });
-
-      Organization.hasMany(models.OrganizationMember, {
-        foreignKey: "organization_id",
+      Project.hasMany(models.ProjectMember, {
+        foreignKey: "project_id",
         as: "members",
-        onDelete: "CASCADE",
-      });
-
-      Organization.hasMany(models.Project, {
-        foreignKey: "organization_id",
-        as: "projects",
         onDelete: "CASCADE",
       });
     }
   }
-  Organization.init(
+  Project.init(
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+        allowNull: false,
+      },
+      organization_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       name: {
@@ -43,23 +46,21 @@ export default (sequelize, DataTypes) => {
       },
       description: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
-      slug: {
-        type: DataTypes.STRING,
+      visibility: {
+        type: DataTypes.ENUM("Public", "Private"),
         allowNull: false,
-        unique: true,
-      },
-      logo_url: {
-        type: DataTypes.STRING,
-      },
-      owner_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+        defaultValue: "Private",
       },
       status: {
-        type: DataTypes.ENUM("Active", "Suspended"),
+        type: DataTypes.ENUM("Active", "Archived"),
+        allowNull: false,
         defaultValue: "Active",
+      },
+      created_by: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
       created_at: {
         type: DataTypes.DATE,
@@ -76,8 +77,8 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Organization",
-      tableName: "organizations",
+      modelName: "Project",
+      tableName: "projects",
       timestamps: false,
       createdAt: "created_at",
       updatedAt: "updated_at",
@@ -86,5 +87,5 @@ export default (sequelize, DataTypes) => {
       underscored: true,
     }
   );
-  return Organization;
+  return Project;
 };

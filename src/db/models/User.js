@@ -37,6 +37,17 @@ export default (sequelize, DataTypes) => {
         as: "organization_memberships",
         onDelete: "CASCADE",
       });
+
+      User.hasMany(models.Project, {
+        foreignKey: "created_by",
+        as: "created_projects",
+      });
+
+      User.hasMany(models.ProjectMember, {
+        foreignKey: "user_id",
+        as: "project_memberships",
+        onDelete: "CASCADE",
+      });
     }
   }
 

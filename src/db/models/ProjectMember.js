@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 export default (sequelize, DataTypes) => {
-  class Organization extends Model {
+  class ProjectMember extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,27 +9,21 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Organization.belongsTo(models.User, {
-        foreignKey: "owner_id",
-        as: "owner",
-        onDelete: "RESTRICT",
+      ProjectMember.belongsTo(models.Project, {
+        foreignKey: "project_id",
+        as: "project",
+        onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
-
-      Organization.hasMany(models.OrganizationMember, {
-        foreignKey: "organization_id",
-        as: "members",
+      ProjectMember.belongsTo(models.User, {
+        foreignKey: "user_id",
+        as: "user",
         onDelete: "CASCADE",
-      });
-
-      Organization.hasMany(models.Project, {
-        foreignKey: "organization_id",
-        as: "projects",
-        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       });
     }
   }
-  Organization.init(
+  ProjectMember.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -37,29 +31,27 @@ export default (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      description: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      slug: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      logo_url: {
-        type: DataTypes.STRING,
-      },
-      owner_id: {
+      project_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      role: {
+        type: DataTypes.ENUM("Owner", "Admin", "Member", "Viewer"),
+        allowNull: false,
+        defaultValue: "Member",
+      },
       status: {
-        type: DataTypes.ENUM("Active", "Suspended"),
+        type: DataTypes.ENUM("Active", "Invited", "Removed"),
+        allowNull: false,
         defaultValue: "Active",
+      },
+      joined_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
       created_at: {
         type: DataTypes.DATE,
@@ -76,8 +68,8 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Organization",
-      tableName: "organizations",
+      modelName: "ProjectMember",
+      tableName: "project_members",
       timestamps: false,
       createdAt: "created_at",
       updatedAt: "updated_at",
@@ -86,5 +78,5 @@ export default (sequelize, DataTypes) => {
       underscored: true,
     }
   );
-  return Organization;
+  return ProjectMember;
 };
