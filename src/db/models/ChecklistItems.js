@@ -1,7 +1,7 @@
 "use strict";
 import { Model } from "sequelize";
 export default (sequelize, DataTypes) => {
-  class Checklist extends Model {
+  class ChecklistItems extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,27 +9,15 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Checklist.belongsTo(models.Project, {
-        foreignKey: "project_id",
-        as: "project",
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-      });
-      Checklist.belongsTo(models.User, {
-        foreignKey: "created_by",
-        as: "creator",
-        onDelete: "RESTRICT",
-        onUpdate: "CASCADE",
-      });
-      Checklist.hasMany(models.ChecklistItems, {
+      ChecklistItems.belongsTo(models.Checklist, {
         foreignKey: "checklist_id",
-        as: "items",
+        as: "checklist",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
     }
   }
-  Checklist.init(
+  ChecklistItems.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -37,11 +25,7 @@ export default (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
-      project_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      created_by: {
+      checklist_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -53,15 +37,14 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      is_template: {
+      position: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      is_required: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
-      },
-      status: {
-        type: DataTypes.ENUM("Active", "Archived"),
-        allowNull: false,
-        defaultValue: "Active",
       },
       created_at: {
         type: DataTypes.DATE,
@@ -78,8 +61,8 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Checklist",
-      tableName: "checklists",
+      modelName: "ChecklistItems",
+      tableName: "checklist_items",
       timestamps: false,
       createdAt: "created_at",
       updatedAt: "updated_at",
@@ -88,5 +71,5 @@ export default (sequelize, DataTypes) => {
       underscored: true,
     }
   );
-  return Checklist;
+  return ChecklistItems;
 };
