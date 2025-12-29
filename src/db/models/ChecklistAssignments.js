@@ -1,7 +1,7 @@
 "use strict";
 import { Model } from "sequelize";
 export default (sequelize, DataTypes) => {
-  class Checklist extends Model {
+  class ChecklistAssignment extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,65 +9,59 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Checklist.belongsTo(models.Project, {
-        foreignKey: "project_id",
-        as: "project",
+      ChecklistAssignment.belongsTo(models.Checklist, {
+        foreignKey: "checklist_id",
+        as: "checklist",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
-      Checklist.belongsTo(models.User, {
-        foreignKey: "created_by",
-        as: "creator",
+      ChecklistAssignment.belongsTo(models.User, {
+        foreignKey: "assigned_to",
+        as: "assignee",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      ChecklistAssignment.belongsTo(models.User, {
+        foreignKey: "assigned_by",
+        as: "assigner",
         onDelete: "RESTRICT",
-        onUpdate: "CASCADE",
-      });
-      Checklist.hasMany(models.ChecklistItem, {
-        foreignKey: "checklist_id",
-        as: "items",
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-      });
-      Checklist.hasMany(models.ChecklistAssignment, {
-        foreignKey: "checklist_id",
-        as: "assignments",
-        onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
     }
   }
-  Checklist.init(
+  ChecklistAssignment.init(
     {
       id: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
+        allowNull: false,
         autoIncrement: true,
-        allowNull: false,
+        primaryKey: true,
       },
-      project_id: {
+      checklist_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      created_by: {
+      assigned_to: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      title: {
-        type: DataTypes.STRING,
+      assigned_by: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      description: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      is_template: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
       },
       status: {
-        type: DataTypes.ENUM("Active", "Archived"),
+        type: DataTypes.ENUM("Active", "Completed", "Revoked"),
         allowNull: false,
         defaultValue: "Active",
+      },
+      due_date: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      assigned_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
       created_at: {
         type: DataTypes.DATE,
@@ -84,8 +78,8 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Checklist",
-      tableName: "checklists",
+      modelName: "ChecklistAssignment",
+      tableName: "checklist_assignments",
       timestamps: false,
       createdAt: "created_at",
       updatedAt: "updated_at",
@@ -94,5 +88,5 @@ export default (sequelize, DataTypes) => {
       underscored: true,
     }
   );
-  return Checklist;
+  return ChecklistAssignment;
 };

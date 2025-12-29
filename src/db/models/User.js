@@ -53,6 +53,14 @@ export default (sequelize, DataTypes) => {
         foreignKey: "created_by",
         as: "created_checklists",
       });
+      User.hasMany(models.ChecklistAssignment, {
+        foreignKey: "assigned_to",
+        as: "checklist_assignments",
+      });
+      User.hasMany(models.ChecklistAssignment, {
+        foreignKey: "assigned_by",
+        as: "checklist_assigned",
+      });
     }
   }
 

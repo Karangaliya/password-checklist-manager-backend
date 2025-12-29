@@ -1,7 +1,7 @@
 "use strict";
 import { Model } from "sequelize";
 export default (sequelize, DataTypes) => {
-  class ChecklistItems extends Model {
+  class ChecklistItem extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,7 +9,7 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ChecklistItems.belongsTo(models.Checklist, {
+      ChecklistItem.belongsTo(models.Checklist, {
         foreignKey: "checklist_id",
         as: "checklist",
         onDelete: "CASCADE",
@@ -17,7 +17,7 @@ export default (sequelize, DataTypes) => {
       });
     }
   }
-  ChecklistItems.init(
+  ChecklistItem.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -61,7 +61,7 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "ChecklistItems",
+      modelName: "ChecklistItem",
       tableName: "checklist_items",
       timestamps: false,
       createdAt: "created_at",
@@ -71,5 +71,5 @@ export default (sequelize, DataTypes) => {
       underscored: true,
     }
   );
-  return ChecklistItems;
+  return ChecklistItem;
 };
