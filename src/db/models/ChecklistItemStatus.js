@@ -1,7 +1,7 @@
 "use strict";
 import { Model } from "sequelize";
 export default (sequelize, DataTypes) => {
-  class ChecklistItem extends Model {
+  class ChecklistItemStatus extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,21 +9,21 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ChecklistItem.belongsTo(models.Checklist, {
-        foreignKey: "checklist_id",
-        as: "checklist",
+      ChecklistItemStatus.belongsTo(models.ChecklistItem, {
+        foreignKey: "checklist_item_id",
+        as: "checklist_item",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
-      ChecklistItem.hasMany(models.ChecklistItemStatus, {
-        foreignKey: "checklist_item_id",
-        as: "statuses",
+      ChecklistItemStatus.belongsTo(models.ChecklistAssignment, {
+        foreignKey: "checklist_assignment_id",
+        as: "checklist_assignment",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
     }
   }
-  ChecklistItem.init(
+  ChecklistItemStatus.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -31,26 +31,22 @@ export default (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
-      checklist_id: {
+      checklist_item_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      title: {
-        type: DataTypes.STRING,
+      checklist_assignment_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
-      description: {
-        type: DataTypes.STRING,
+      status: {
+        type: DataTypes.ENUM("Pending", "Completed"),
+        allowNull: false,
+        defaultValue: "Pending",
+      },
+      completed_at: {
+        type: DataTypes.DATE,
         allowNull: true,
-      },
-      position: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      is_required: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
       },
       created_at: {
         type: DataTypes.DATE,
@@ -67,8 +63,8 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "ChecklistItem",
-      tableName: "checklist_items",
+      modelName: "ChecklistItemStatus",
+      tableName: "checklist_item_status",
       timestamps: false,
       createdAt: "created_at",
       updatedAt: "updated_at",
@@ -77,5 +73,5 @@ export default (sequelize, DataTypes) => {
       underscored: true,
     }
   );
-  return ChecklistItem;
+  return ChecklistItemStatus;
 };

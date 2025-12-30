@@ -27,6 +27,12 @@ export default (sequelize, DataTypes) => {
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
       });
+      ChecklistAssignment.hasMany(models.ChecklistItemStatus, {
+        foreignKey: "checklist_assignment_id",
+        as: "statuses",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
   }
   ChecklistAssignment.init(
