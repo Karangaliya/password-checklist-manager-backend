@@ -19,13 +19,14 @@ export default (sequelize, DataTypes) => {
       Organization.hasMany(models.OrganizationMember, {
         foreignKey: "organization_id",
         as: "members",
-        onDelete: "CASCADE",
       });
-
       Organization.hasMany(models.Project, {
         foreignKey: "organization_id",
         as: "projects",
-        onDelete: "CASCADE",
+      });
+      Organization.hasMany(models.Credential, {
+        foreignKey: "organization_id",
+        as: "credentials",
       });
     }
   }

@@ -20,35 +20,29 @@ export default (sequelize, DataTypes) => {
         foreignKey: "referred_by",
         as: "referrals",
       });
-
       User.hasMany(models.RefreshToken, {
         foreignKey: "user_id",
         as: "refresh_tokens",
         onDelete: "CASCADE",
       });
-
       User.hasMany(models.Organization, {
         foreignKey: "owner_id",
         as: "owned_organizations",
       });
-
       User.hasMany(models.OrganizationMember, {
         foreignKey: "user_id",
         as: "organization_memberships",
         onDelete: "CASCADE",
       });
-
       User.hasMany(models.Project, {
         foreignKey: "created_by",
         as: "created_projects",
       });
-
       User.hasMany(models.ProjectMember, {
         foreignKey: "user_id",
         as: "project_memberships",
         onDelete: "CASCADE",
       });
-
       User.hasMany(models.Checklist, {
         foreignKey: "created_by",
         as: "created_checklists",
@@ -60,6 +54,10 @@ export default (sequelize, DataTypes) => {
       User.hasMany(models.ChecklistAssignment, {
         foreignKey: "assigned_by",
         as: "checklist_assigned",
+      });
+      User.hasMany(models.Credential, {
+        foreignKey: "created_by",
+        as: "created_credentials",
       });
     }
   }
