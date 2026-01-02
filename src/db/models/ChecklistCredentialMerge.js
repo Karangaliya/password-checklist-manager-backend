@@ -1,7 +1,7 @@
 "use strict";
 import { Model } from "sequelize";
 export default (sequelize, DataTypes) => {
-  class Checklist extends Model {
+  class ChecklistCredentialMerge extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,71 +9,45 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Checklist.belongsTo(models.Project, {
-        foreignKey: "project_id",
-        as: "project",
+      ChecklistCredentialMerge.belongsTo(models.Checklist, {
+        foreignKey: "checklist_id",
+        as: "checklist",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
-      Checklist.belongsTo(models.User, {
+      ChecklistCredentialMerge.belongsTo(models.Credential, {
+        foreignKey: "credential_id",
+        as: "credential",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      ChecklistCredentialMerge.belongsTo(models.User, {
         foreignKey: "created_by",
         as: "creator",
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
       });
-      Checklist.hasMany(models.ChecklistItem, {
-        foreignKey: "checklist_id",
-        as: "items",
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-      });
-      Checklist.hasMany(models.ChecklistAssignment, {
-        foreignKey: "checklist_id",
-        as: "assignments",
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-      });
-      Checklist.hasMany(models.ChecklistCredentialMerge, {
-        foreignKey: "checklist_id",
-        as: "credentialMerges",
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-      });
     }
   }
-  Checklist.init(
+  ChecklistCredentialMerge.init(
     {
       id: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
         autoIncrement: true,
+        primaryKey: true,
         allowNull: false,
       },
-      project_id: {
+      checklist_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      credential_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
       created_by: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      description: {
-        type: DataTypes.STRING,
         allowNull: true,
-      },
-      is_template: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-      },
-      status: {
-        type: DataTypes.ENUM("Active", "Archived"),
-        allowNull: false,
-        defaultValue: "Active",
       },
       created_at: {
         type: DataTypes.DATE,
@@ -90,8 +64,8 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Checklist",
-      tableName: "checklists",
+      modelName: "ChecklistCredentialMerge",
+      tableName: "checklist_credential_merge",
       timestamps: false,
       createdAt: "created_at",
       updatedAt: "updated_at",
@@ -100,5 +74,5 @@ export default (sequelize, DataTypes) => {
       underscored: true,
     }
   );
-  return Checklist;
+  return ChecklistCredentialMerge;
 };

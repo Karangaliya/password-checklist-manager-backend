@@ -67,6 +67,10 @@ export default (sequelize, DataTypes) => {
         foreignKey: "granted_by",
         as: "credential_grants",
       });
+      User.hasMany(models.ChecklistCredentialMerge, {
+        foreignKey: "created_by",
+        as: "created_credential_merges",
+      });
     }
   }
 

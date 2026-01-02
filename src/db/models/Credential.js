@@ -33,6 +33,12 @@ export default (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+      Credential.hasMany(models.ChecklistCredentialMerge, {
+        foreignKey: "credential_id",
+        as: "checklistMerges",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
   }
   Credential.init(
