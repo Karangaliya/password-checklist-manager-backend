@@ -27,6 +27,12 @@ export default (sequelize, DataTypes) => {
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
       });
+      Credential.hasMany(models.CredentialAccess, {
+        foreignKey: "credential_id",
+        as: "accesses",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
   }
   Credential.init(

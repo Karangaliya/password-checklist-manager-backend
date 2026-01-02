@@ -59,6 +59,14 @@ export default (sequelize, DataTypes) => {
         foreignKey: "created_by",
         as: "created_credentials",
       });
+      User.hasMany(models.CredentialAccess, {
+        foreignKey: "user_id",
+        as: "credential_accesses",
+      });
+      User.hasMany(models.CredentialAccess, {
+        foreignKey: "granted_by",
+        as: "credential_grants",
+      });
     }
   }
 
