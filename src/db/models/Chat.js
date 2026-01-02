@@ -1,7 +1,7 @@
 "use strict";
 import { Model } from "sequelize";
 export default (sequelize, DataTypes) => {
-  class Project extends Model {
+  class Chat extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,39 +9,27 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Project.belongsTo(models.Organization, {
+      Chat.belongsTo(models.Organization, {
         foreignKey: "organization_id",
         as: "organization",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
-      Project.belongsTo(models.User, {
+      Chat.belongsTo(models.Project, {
+        foreignKey: "project_id",
+        as: "project",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      Chat.belongsTo(models.User, {
         foreignKey: "created_by",
-        as: "creator",
+        as: "created_by_user",
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
       });
-      Project.hasMany(models.ProjectMember, {
-        foreignKey: "project_id",
-        as: "members",
-        onDelete: "CASCADE",
-      });
-      Project.hasMany(models.Checklist, {
-        foreignKey: "project_id",
-        as: "checklists",
-        onDelete: "CASCADE",
-      });
-      Project.hasMany(models.Credential, {
-        foreignKey: "project_id",
-        as: "credentials",
-      });
-      Project.hasMany(models.Chat, {
-        foreignKey: "project_id",
-        as: "chats",
-      });
     }
   }
-  Project.init(
+  Chat.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -51,28 +39,18 @@ export default (sequelize, DataTypes) => {
       },
       organization_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      description: {
-        type: DataTypes.TEXT,
         allowNull: true,
       },
-      visibility: {
-        type: DataTypes.ENUM("Public", "Private"),
-        allowNull: false,
-        defaultValue: "Private",
-      },
-      status: {
-        type: DataTypes.ENUM("Active", "Archived"),
-        allowNull: false,
-        defaultValue: "Active",
+      project_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
       created_by: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      type: {
+        type: DataTypes.ENUM("Organization", "Project"),
         allowNull: false,
       },
       created_at: {
@@ -90,8 +68,8 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Project",
-      tableName: "projects",
+      modelName: "Chat",
+      tableName: "chats",
       timestamps: false,
       createdAt: "created_at",
       updatedAt: "updated_at",
@@ -100,5 +78,5 @@ export default (sequelize, DataTypes) => {
       underscored: true,
     }
   );
-  return Project;
+  return Chat;
 };

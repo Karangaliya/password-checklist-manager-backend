@@ -71,6 +71,10 @@ export default (sequelize, DataTypes) => {
         foreignKey: "created_by",
         as: "created_credential_merges",
       });
+      User.hasMany(models.Chat, {
+        foreignKey: "created_by",
+        as: "created_chats",
+      });
     }
   }
 

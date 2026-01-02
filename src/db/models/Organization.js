@@ -28,6 +28,10 @@ export default (sequelize, DataTypes) => {
         foreignKey: "organization_id",
         as: "credentials",
       });
+      Organization.hasMany(models.Chat, {
+        foreignKey: "organization_id",
+        as: "chats",
+      });
     }
   }
   Organization.init(
